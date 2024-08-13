@@ -1,6 +1,5 @@
 import streamlit as st
 
-def about_page():
     st.title("About Our Project")
     st.write("""
     Welcome to our quirky and unconventional project! We believe that the most unexpected ideas often lead to the most innovative solutions. Our theme revolves around embracing the unusual, the strange, and the seemingly absurd—because if it works, who’s to say it’s not brilliant?
