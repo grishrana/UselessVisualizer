@@ -1,8 +1,9 @@
 import streamlit as st
 
-    st.title("About Our Project")
+def about_page():
+    st.title("About Us")
     st.write("""
-    Welcome to our quirky and unconventional project! We believe that the most unexpected ideas often lead to the most innovative solutions. Our theme revolves around embracing the unusual, the strange, and the seemingly absurd—because if it works, who’s to say it’s not brilliant?
+    We believe that the most unexpected ideas often lead to the most innovative solutions. Our theme revolves around embracing the unusual, the strange, and the seemingly absurd—because if it works, who’s to say it’s not brilliant?
     """)
     
     st.subheader("What We Do")
@@ -16,19 +17,25 @@ import streamlit as st
     """)
     
     st.subheader("Our Team")
-    st.write("### Grish Rana")
-    st.write("**Email:** grishrana6@gmail.com")
-    st.write("**GitHub:** [github.com/grishrana](https://github.com/grishrana)")
-    st.write("**LinkedIn:** [linkedin.com/in/grishrana](https://linkedin.com/in/grishrana)")
-    st.write("**Currently Studying:** Software Engineering at Pokhara University")
-    st.write("**Bio:** Enthusiastic about data science and Python, with a focus on turning data into actionable insights.")
+    # Split the team members into columns
+    col1, col2 = st.columns(2)
     
-    st.write("### Damodar Bagale")
-    st.write("**Email:** bagalesushil37@gmail.com")
-    st.write("**GitHub:** [github.com/Sushil346](https://github.com/Sushil346)")
-    st.write("**LinkedIn:** [linkedin.com/in/damodarbagaleofficial](https://linkedin.com/in/damodarbagaleofficial)")
-    st.write("**Currently Studying:** Computer Engineering at Tribhuvan University")
-    st.write("**Bio:** Specializes in problem-solving through creative coding and has a strong interest in AI/ML development. Enjoys hiking and exploring new tech gadgets in his free time.")
+    with col1:
+        st.image("images/grish_rana.jpg", width=280)
+        st.write("### Grish Rana")
+        st.markdown("[![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat-square&logo=linkedin)](https://linkedin.com/in/grishrana)")
+        st.markdown("[![GitHub](https://img.shields.io/badge/GitHub-black?style=flat-square&logo=github)](https://github.com/grishrana)")
+
+        st.write("**Currently Studying:** Software Engineering at Pokhara University")
+        st.write("**Bio:** Enthusiastic about data science and Python, with a focus on turning data into actionable insights.")
+    
+    with col2:
+        st.image("images/damodar_bagale.jpg", width=280)
+        st.write("### Damodar Bagale")
+        st.markdown("[![LinkedIn](https://img.shields.io/badge/LinkedIn-blue?style=flat-square&logo=linkedin)](https://linkedin.com/in/damodarbagaleofficial)")
+        st.markdown("[![GitHub](https://img.shields.io/badge/GitHub-black?style=flat-square&logo=github)](https://github.com/Sushil346)")
+        st.write("**Currently Studying:** Computer Engineering at Tribhuvan University")
+        st.write("**Bio:** Has a strong interest in AI/ML development. Enjoys hiking and exploring new tech gadgets in his free time.")
     
     st.subheader("Our Philosophy")
     st.write("""
@@ -36,10 +43,15 @@ import streamlit as st
     """)
     
     st.subheader("Inspirational Quotes")
+
     st.write("""
-    “It’s not about ideas. It’s about making ideas happen.” – Scott Belsky
-    Innovation thrives not just on creativity, but on the action that brings ideas to life.
+    “It’s not about ideas. It’s about making ideas happen.” – Scott Belsky             
+     Innovation thrives not just on creativity, but on the action that brings ideas to life.
     
-    “The best way to predict the future is to invent it.” – Alan Kay
-    The path to innovation is paved with bold ideas and the courage to bring them into reality.
+             
+    “The best way to predict the future is to invent it.” – Alan Kay             
+     The path to innovation is paved with bold ideas and the courage to bring them into reality.
     """)
+
+# Call the function to render the page
+about_page()
