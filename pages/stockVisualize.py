@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import datetime
 import time
-
+from scipy.stats import linregress
 
 st.title("**Stock Data Visualization**")
 
@@ -24,34 +24,45 @@ def getData(stock="AAPL") -> pd.DataFrame:
 
 
 stock_name = st.text_input("Enter stock ticker symbol: ", "AAPL")
+
+
 if stock_name:
-    st.write(f"**Real time {stock_name} price data:** ")
     df = getData(stock_name)
     if df.empty:
         st.error("Invalid Ticker", icon="🚨")
 
-    else:
-        st.write(df)
-
-
-st.header(f"**CandleStick Analysis {stock_name}**")
 
 today = datetime.datetime.now()
+mindate = df.loc[0, "Date"]
+
 col1, col2 = st.columns(2)
 with col1:
     end = st.date_input(
-        "Enter End Date", datetime.date(today.year, today.month, today.day)
+        "Enter End Date",
+        datetime.date(today.year, today.month, today.day),
+        max_value=datetime.date(today.year, today.month, today.day),
+        min_value=datetime.date(mindate.year, mindate.month, mindate.day),
     )
 
 with col2:
     start = st.date_input(
-        "Enter Start Date", datetime.date(today.year, today.month, today.day - 7)
+        "Enter Start Date",
+        datetime.date(today.year, today.month, today.day - 7),
+        max_value=datetime.date(today.year, today.month, today.day),
+        min_value=datetime.date(mindate.year, mindate.month, mindate.day),
     )
 
 
 filtered_df = df[
     (df["Date"] >= pd.Timestamp(start)) & (df["Date"] <= pd.Timestamp(end))
 ]
+
+st.write(f"**Real time {stock_name} price data:** ")
+st.write(filtered_df)
+
+st.header(f"**CandleStick Analysis {stock_name}**")
+
+
 fig = go.Figure(
     data=[
         go.Candlestick(
@@ -60,15 +71,52 @@ fig = go.Figure(
             high=filtered_df["High"],
             close=filtered_df["Close"],
             low=filtered_df["Low"],
+            name=stock_name,
         )
     ]
 )
 
 fig.update_layout(
-    xaxis_title="Date", yaxis_title="Price", xaxis_rangeslider_visible=False
+    xaxis_title="Date",
+    yaxis_title="Price",
+    xaxis_rangeslider_visible=False,
+    xaxis=dict(autorange="reversed"),
 )
 
 st.plotly_chart(fig)
+
+
+st.subheader("**Stock Price Predictor**")
+fig, axe = plt.subplots()
+axe.scatter(df["Date"], df["Close"])
+fifty_years_ago = today - datetime.timedelta(days=50 * 365.25)
+calc_reg = linregress(
+    df["Date"].map(datetime.datetime.toordinal),
+    df["Close"],
+)
+
+new_dates = list(
+    pd.date_range(
+        start=df.iloc[-1]["Date"],
+        end=(df.iloc[-1]["Date"] + pd.DateOffset(years=50)),
+        freq="D",
+    )
+)
+
+x_val = list(df["Date"]) + list(new_dates)
+y_val = [
+    (calc_reg.slope * datetime.datetime.toordinal(x)) + calc_reg.intercept
+    for x in x_val
+]
+
+axe.plot(x_val, y_val, "r")
+axe.set(
+    title="Rise in Stock Price",
+    xlabel="Date",
+    ylabel="Close Price",
+)
+st.pyplot(fig)
+
 
 st.subheader("**Correlation Heatmap**")
 
