@@ -127,6 +127,10 @@ sns.heatmap(data=corr_masked, annot=True, fmt=".1f", ax=axe)
 
 st.pyplot(fig)
 
+st.subheader("**Pairplot of columns**")
+pairplot = sns.pairplot(df)
+fig = pairplot.fig
+st.pyplot(fig)
 
 st.subheader(f"**Line Chart of {stock_name}(daily) 📈**")
 while True:
