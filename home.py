@@ -1,7 +1,5 @@
-from numpy import True_
 import streamlit as st
 
-from pages.About import about_page
 
 about_page = st.Page(
     page="pages/About.py",
