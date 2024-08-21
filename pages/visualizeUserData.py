@@ -21,6 +21,28 @@ def read_file(userfile) -> pd.DataFrame:
     return df
 
 
+def corr_map(df):
+    corr = df.corr(numeric_only=True)
+    corr_masked = corr.where(np.identity(len(corr.columns)).astype(bool))
+    fig, axe = plt.subplots(figsize=(10, 10))
+    sns.heatmap(data=corr_masked, annot=True, fmt=".1f", ax=axe)
+    return fig
+
+
+def scatter_plot(df, col1, col2):
+    fig, axe = plt.subplots(figsize=(10, 10))
+    axe.scatter(df[col1], df[col2])
+    axe.set(title=f"{col1} vs {col2}", xlabel=f"{col1}", ylabel=f"{col2}")
+    return fig
+
+
+def line_plot(df, col):
+    fig, axe = plt.subplots(figsize=(10, 10))
+    axe.plot(range(len(df[col])), df[col].sample(frac=1).values, ":g")
+    axe.set(title=f"Line plot of {col}")
+    return fig
+
+
 st.header("**Visualize Your Data**")
 uploaded_file = st.file_uploader("Choose an Excel or CSV file", type=["csv", "xlsx"])
 
@@ -36,24 +58,17 @@ if uploaded_file is not None:
 
     numeric_columns = df.select_dtypes(include="number")
 
-    st.subheader("**Correlation Heatmap**")
-    corr = df.corr(numeric_only=True)  # pyright: ignore
-    corr_masked = corr.where(
-        np.identity(len(corr.columns)).astype(bool)
-    )  # pyright: ignore
-    fig, axe = plt.subplots(figsize=(10, 10))
-    sns.heatmap(data=corr_masked, annot=True, fmt=".1f", ax=axe)
-
-    st.pyplot(fig)
-
     if len(numeric_columns) >= 2:
+
+        st.subheader("Correlation Heatmap")
+        heatmap = corr_map(df)
+        st.pyplot(heatmap)
+
         col1, col2 = random.sample(list(numeric_columns), 2)
 
         st.subheader(f"Scatter Plot {col1} vs {col2}")
-        fig, ax = plt.subplots()
-        ax.scatter(df[col1], df[col2])
-        ax.set(title=f"{col1} vs {col2}", xlabel=f"{col1}", ylabel=f"{col2}")
-        st.pyplot(fig)
+        scatter = scatter_plot(df, col1, col2)
+        st.pyplot(scatter)
 
     else:
         st.error("Not enough numerical Columns")
@@ -62,11 +77,8 @@ if uploaded_file is not None:
         col = random.choice(list(numeric_columns))
 
         st.header(f"Line Plot of {col}")
-        fig, ax = plt.subplots()
-        ax.plot(range(len(df[col])), df[col].sample(frac=1).values, ":g")
-        ax.set(title=f"Line Plot of {col}")
-
-        st.pyplot(fig)
+        line = line_plot(df, col)
+        st.pyplot(line)
 
     else:
         st.error("Not enough numerical columns")
